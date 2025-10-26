@@ -553,7 +553,7 @@ git checkout -b feature/amazing-feature
 
 ```bash
 # 1. Fork and clone
-git clone https://github.com/yourusername/ai-interview-assistant.git
+git clone [https://github.com/MuhammadAnasAkhtar/AI-Recipe-Generator-Nutrition-Analyzer.git]
 
 # 2. Create development branch
 git checkout -b dev

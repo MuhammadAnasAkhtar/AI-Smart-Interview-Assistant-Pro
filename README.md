@@ -586,11 +586,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Contributors** who help improve this project
 - **Users** who provide valuable feedback and feature requests
 
-## 📞 Support
-
-- **Documentation**: [GitHub Wiki](https://github.com/yourusername/ai-interview-assistant/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/ai-interview-assistant/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/ai-interview-assistant/discussions)
 
 ## 🚀 Future Enhancements
 
@@ -602,14 +597,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] Mobile app version
 - [ ] Integration with job platforms
 
----
-
-<div align="center">
-
-**Ready to ace your next interview? 🚀**
-
-[Get Started](#-quick-start) • [Report Bug](https://github.com/yourusername/ai-interview-assistant/issues) • [Request Feature](https://github.com/yourusername/ai-interview-assistant/issues)
-
-⭐ **Star this repo if you find it helpful!**
-
-</div>

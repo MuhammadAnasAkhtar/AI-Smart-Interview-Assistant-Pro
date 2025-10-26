@@ -1,0 +1,10 @@
+# updated_requirements.txt
+fastapi
+uvicorn
+pydantic
+openai
+python-dotenv
+asyncio
+aiohttp
+jinja2
+python-multipart

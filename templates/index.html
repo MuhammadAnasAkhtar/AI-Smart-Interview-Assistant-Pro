@@ -1,0 +1,257 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Smart Interview Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .loading-dots:after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="flex justify-center items-center mb-4">
+                <i class="fas fa-robot text-4xl text-blue-600 mr-4"></i>
+                <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    AI Interview Assistant
+                </h1>
+            </div>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Powered by OpenAI - Get personalized interview questions and AI-powered feedback
+            </p>
+        </header>
+
+        <!-- Setup Section -->
+        <div id="setup-section" class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Start Your AI-Powered Interview</h2>
+                <p class="text-gray-600 mb-8">Select your role and preferences to generate personalized questions</p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Job Role</label>
+                            <select id="job-role" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                <option value="software engineer">Software Engineer</option>
+                                <option value="devops engineer">DevOps Engineer</option>
+                                <option value="data engineer">Data Engineer</option>
+                                <option value="data analyst">Data Analyst</option>
+                                <option value="data scientist">Data Scientist</option>
+                                <option value="product manager">Product Manager</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">Experience Level</label>
+                            <select id="experience-level" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                                <option value="entry">Entry Level (0-2 years)</option>
+                                <option value="junior">Junior (2-4 years)</option>
+                                <option value="mid-level" selected>Mid-Level (4-7 years)</option>
+                                <option value="senior">Senior (7+ years)</option>
+                                <option value="lead">Lead/Principal (10+ years)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-3">
+                                Number of Questions 
+                                <span class="text-xs text-gray-500">(1-100)</span>
+                            </label>
+                            <div class="flex items-center space-x-4">
+                                <input type="range" id="question-count" min="5" max="100" value="15" 
+                                       class="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                <span id="question-count-display" class="text-2xl font-bold text-blue-600 min-w-12">15</span>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500 mt-2">
+                                <span>Quick (5)</span>
+                                <span>Standard (15)</span>
+                                <span>Comprehensive (50)</span>
+                                <span>Full (100)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
+                            <div class="flex">
+                                <i class="fas fa-lightbulb text-blue-500 text-xl mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-blue-800">AI-Powered Questions</h4>
+                                    <p class="text-blue-600 text-sm mt-1">
+                                        Questions are generated using OpenAI GPT based on your selected role and experience level.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="startInterview()" 
+                        class="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl">
+                    <i class="fas fa-bolt mr-2"></i>Generate AI Interview
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div id="loading-section" class="hidden max-w-2xl mx-auto text-center">
+            <div class="bg-white rounded-2xl shadow-xl p-12">
+                <div class="animate-spin rounded-full h-20 w-20 border-b-2 border-blue-600 mx-auto mb-6"></div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Generating Your Interview</h3>
+                <p class="text-gray-600 mb-2">AI is creating personalized questions for</p>
+                <p class="text-xl font-semibold text-blue-600 mb-6" id="generating-for"></p>
+                <div class="loading-dots text-gray-500 text-lg"></div>
+                <p class="text-sm text-gray-500 mt-6">This may take 10-30 seconds depending on question count</p>
+            </div>
+        </div>
+
+        <!-- Interview Section -->
+        <div id="interview-section" class="hidden max-w-6xl mx-auto">
+            <div class="grid xl:grid-cols-3 gap-8">
+                <!-- Progress & Info Sidebar -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                            Interview Info
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Role:</span>
+                                <span class="font-semibold" id="info-role">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Level:</span>
+                                <span class="font-semibold" id="info-level">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Questions:</span>
+                                <span class="font-semibold" id="info-count">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-chart-line text-green-500 mr-2"></i>
+                            Progress
+                        </h3>
+                        <div id="progress-content">
+                            <div class="text-center py-4">
+                                <div class="text-2xl font-bold text-gray-800 mb-2" id="progress-percentage">0%</div>
+                                <div class="w-full bg-gray-200 rounded-full h-3">
+                                    <div id="progress-bar" class="bg-green-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                                <div class="text-sm text-gray-600 mt-2" id="progress-text">Starting interview...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-clock text-orange-500 mr-2"></i>
+                            Timer
+                        </h3>
+                        <div class="text-center">
+                            <div id="timer" class="text-3xl font-mono font-bold text-gray-800">00:00</div>
+                            <div class="text-sm text-gray-600 mt-2">Current question time</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Interview Area -->
+                <div class="xl:col-span-2 space-y-6">
+                    <!-- Question Card -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                <i class="fas fa-question-circle text-blue-500 mr-2"></i>
+                                Question <span id="current-q-number">1</span>
+                            </h3>
+                            <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                                <i class="fas fa-robot mr-1"></i> AI Generated
+                            </span>
+                        </div>
+                        <div id="current-question" class="text-gray-700 text-lg leading-relaxed p-4 bg-blue-50 rounded-xl min-h-[120px]"></div>
+                    </div>
+
+                    <!-- Answer Area -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-edit text-green-500 mr-2"></i>
+                            Your Answer
+                        </h3>
+                        <textarea id="user-answer" rows="8" 
+                                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none transition-all"
+                                  placeholder="Type your detailed answer here... (AI will analyze your response)"></textarea>
+                        <div class="flex justify-between items-center mt-4">
+                            <div class="text-sm text-gray-500">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Be specific and include examples from your experience
+                            </div>
+                            <button onclick="submitAnswer()" 
+                                    class="bg-green-600 text-white py-3 px-8 rounded-xl hover:bg-green-700 transition duration-200 font-semibold flex items-center">
+                                <i class="fas fa-paper-plane mr-2"></i> Submit Answer
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Area -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                            <i class="fas fa-chart-bar text-purple-500 mr-2"></i>
+                            AI Feedback
+                        </h3>
+                        <div id="feedback-content" class="space-y-4">
+                            <div class="text-center text-gray-500 py-8">
+                                <i class="fas fa-robot text-4xl mb-3 opacity-50"></i>
+                                <p class="text-lg">Your AI-powered feedback will appear here</p>
+                                <p class="text-sm mt-2">After you submit your first answer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trophy text-3xl text-green-600"></i>
+                    </div>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-2">Interview Complete!</h2>
+                    <p class="text-gray-600">Your AI-powered interview results are ready</p>
+                </div>
+                
+                <div id="final-results" class="space-y-6">
+                    <!-- Results will be populated here -->
+                </div>
+                
+                <div class="text-center mt-8">
+                    <button onclick="restartInterview()" 
+                            class="bg-blue-600 text-white py-3 px-8 rounded-xl hover:bg-blue-700 transition duration-200 font-semibold inline-flex items-center">
+                        <i class="fas fa-redo mr-2"></i> Start New Interview
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
